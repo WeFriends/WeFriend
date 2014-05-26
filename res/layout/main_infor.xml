@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <Button
+        android:layout_marginTop="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="南京东路"
+        android:id="@+id/start" 
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="人民广场"
+        android:id="@+id/start2"
+        />
+     <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="汶水路站"
+        android:id="@+id/start3"
+        />
+      <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="停止"
+        android:id="@+id/stop"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/texinfor" 
+        />
+    
+
+</LinearLayout>
