@@ -34,7 +34,7 @@ public class WcService extends Service implements Runnable{
     
     private GeoPoint g[] = new GeoPoint[20];
     public static final  String   s[] ={"南京东路","人民广场","汶水路站"};
-    private int index = 0;
+    private static int index = 0;
     private Thread thread;
 	public static WcService getInstance(){
 		
