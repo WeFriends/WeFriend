@@ -1,5 +1,6 @@
 package com.example.map;
 import android.app.Activity;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,8 +10,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-
-import com.example.map.WcService.NotificationMesg;
+ 
 import com.example.wcsmsc.R;
 
 public class InfoMationActivity extends Activity{
