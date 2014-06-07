@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.android.wefriend.activity.InfoMationActivity;
+import com.android.wefriend.activity.WcService;
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.MKGeneralListener;
 import com.baidu.mapapi.map.MKEvent;
  
-import com.example.map.InfoMationActivity;
-import com.example.map.WcService;
 
 public class SmsAplication extends Application{
 	 public BMapManager mBMapManager = null;

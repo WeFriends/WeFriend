@@ -1,4 +1,4 @@
-package com.example.map;
+package com.android.wefriend.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -53,12 +53,6 @@ public class WcService extends Service implements Runnable{
 		mScreenOnFilter.setPriority(-888);
 		mScreenOnFilter.addAction("android.intent.action.SCREEN_OFF");
 	    this.registerReceiver(mScreenOnReceiver, mScreenOnFilter);
-	    lockintent = new Intent(this,SmsMapActivity.class);
-	    lockintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		 
-		
-		 
-		
 	}
 	@Override
 	public void onDestroy() {
