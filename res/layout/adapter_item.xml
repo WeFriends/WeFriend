@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:padding="15dp">
-    <TextView
+    <Button
         android:id="@+id/item_cancel"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
 	    android:textSize="@dimen/normalTxtSize"
 	    android:background="@color/titleSubBGColor"
         />
-    <TextView
+    <Button
         android:id="@+id/item_start"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
