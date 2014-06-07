@@ -4,5 +4,10 @@
     <string name="app_name">WcSMSC</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    
+    
+    <string name="title">到站提醒</string>
+    <string name="history_txt">历史记录</string>
+    <string name="hot_txt">常设地点</string>
 
 </resources>
