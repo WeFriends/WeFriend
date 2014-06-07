@@ -41,6 +41,10 @@ public class InfoMationActivity extends Activity implements OnClickListener{
 		showByHistory = (TextView)findViewById(R.id.byHistory);
 		stopName = (EditText)findViewById(R.id.search_edit);
 		mListView = (ListView)findViewById(R.id.searchresult_list);
+
+		showByHot.setOnClickListener(this);
+		showByHistory.setOnClickListener(this);
+		searchBtn.setOnClickListener(this);
 	}
 	
 	/**
