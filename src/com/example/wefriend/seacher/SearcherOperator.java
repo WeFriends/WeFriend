@@ -1,18 +1,27 @@
 package com.example.wefriend.seacher;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 
+import com.android.wefriend.bean.IntrestePoint;
+import com.baidu.location.BDLocation;
 import com.baidu.mapapi.search.MKAddrInfo;
 import com.baidu.mapapi.search.MKBusLineResult;
 import com.baidu.mapapi.search.MKDrivingRouteResult;
+import com.baidu.mapapi.search.MKLine;
 import com.baidu.mapapi.search.MKPlanNode;
 import com.baidu.mapapi.search.MKPoiResult;
+import com.baidu.mapapi.search.MKRouteAddrResult;
 import com.baidu.mapapi.search.MKSearch;
 import com.baidu.mapapi.search.MKSearchListener;
 import com.baidu.mapapi.search.MKShareUrlResult;
 import com.baidu.mapapi.search.MKSuggestionResult;
+import com.baidu.mapapi.search.MKTransitRoutePlan;
 import com.baidu.mapapi.search.MKTransitRouteResult;
 import com.baidu.mapapi.search.MKWalkingRouteResult;
+import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.wcsmsc.SmsAplication;
 
 /******
@@ -24,6 +33,7 @@ public class SearcherOperator {
 	
 	private MKSearch mkSearch; //ÓÃÓÚÎ»ÖÃ¼ìË÷¡¢ÖÜ±ß¼ìË÷¡¢·¶Î§¼ìË÷¡¢¹«½»¼ìË÷¡¢¼Ý³Ë¼ìË÷¡¢²½ÐÐ¼ìË÷
 	private OnGetTransitRouteResult ogtrresult;
+	private BDLocation   bdLocation;
 	
 	public SearcherOperator(Context context){
 		mkSearch = new MKSearch();
@@ -43,7 +53,25 @@ public class SearcherOperator {
 	            }
 	            public void onGetTransitRouteResult(MKTransitRouteResult res,
 	                    int error) {
-	            	if(ogtrresult!=null)ogtrresult.onGetTransitRouteResult(res, error);
+	            	if(ogtrresult!=null){
+	    				int n = res.getNumPlan();
+	    				ArrayList<IntrestePoint> intrestePoints = new ArrayList<IntrestePoint>();
+	    				for(int i = 0 ; i<n;i++){
+	    					MKTransitRoutePlan mktr = res.getPlan(i);
+	    					
+	    					MKLine mkLine = mktr.getLine(0);
+	    					
+	    					IntrestePoint intrestePoint =new IntrestePoint();
+	    					intrestePoint.setGeoPoint(mktr.getEnd());
+	    					intrestePoint.setObjPoint(res.getEnd().pt);
+	    					intrestePoint.setTitle(mkLine.getTitle());
+	    					intrestePoint.setAddress(mkLine.getGetOffStop().name);
+	    					intrestePoint.setNum(mkLine.getNumViaStops());
+	    					intrestePoint.setDistance(mkLine.getDistance());
+	    					intrestePoints.add(intrestePoint);
+	    				}
+	            		ogtrresult.onGetTransitRouteResult(intrestePoints, error);
+	            	}
 	            }
 	            public void onGetWalkingRouteResult(MKWalkingRouteResult res,
 	                    int error) {
@@ -93,8 +121,24 @@ public class SearcherOperator {
 		mkSearch.transitSearch("ÉÏº£", start,end);
 	}
 	
-	public interface OnGetTransitRouteResult  {
-		public void onGetTransitRouteResult(MKTransitRouteResult res,int error);
+	public void getBuStationInfo(String  endName,OnGetTransitRouteResult ogtrr){
+		MKPlanNode mkPlanNode = new MKPlanNode();
+		GeoPoint geoPoint = new GeoPoint((int)(bdLocation.getLatitude()*1e6), (int)(bdLocation.getLongitude()*1e6));
+		mkPlanNode.pt = geoPoint;
+		 
+		MKPlanNode end = new MKPlanNode();
+		end.name = endName;
+		getBuStationInfo(mkPlanNode, end, ogtrr);
 	}
+	
+	public void setLocationBDLocation(BDLocation bdLocation){
+		this.bdLocation = bdLocation;
+		
+	}
+	public interface OnGetTransitRouteResult  {
+		public void onGetTransitRouteResult(List<IntrestePoint> intrestePoints,int error);
+	}
+	
+	
 	
 }
