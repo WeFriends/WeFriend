@@ -14,6 +14,7 @@ import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
 import android.util.Log;
 
+import com.android.wefriend.bean.IntrestePoint;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.BDNotifyListener;
@@ -25,17 +26,13 @@ import com.baidu.platform.comapi.basestruct.GeoPoint;
 public class WcService extends Service implements Runnable{
 	private LocationClient mLocClient;
 	 
-	private GeoPoint       geoPointobj;//目标距离
+	 
 	private double    dm=500;             //提醒距离
 	private int    time = 1000*10;
 	private LocationListenner ltl;
     private Intent   lockintent ;
     private boolean  is = false;
-     
-    
-    private GeoPoint g[] = new GeoPoint[20];
-    public static final  String   s[] ={"南京东路","人民广场","汶水路站"};
-    private static int index = 0;
+    private IntrestePoint intrestePoint;
     private Thread thread;
 	 
 	
@@ -73,15 +70,13 @@ public class WcService extends Service implements Runnable{
 		super.onStart(intent, startId);
 		SharedPreferences sp = getSharedPreferences("DATE",Context.MODE_APPEND );
 		if(intent!=null){
-			this.index =intent.getIntExtra("INDEX",0); 
-			Editor editor =sp.edit();
-			editor.putInt("Index", index);
-			editor.commit();
+			this.intrestePoint =(IntrestePoint)intent.getParcelableExtra("BEAN"); 
+			 
 		}else{
-			index = sp.getInt("Index", 0);
+			 
 		}
 		if(!is)
-		start(null);
+		start();
 	}
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -113,17 +108,18 @@ public class WcService extends Service implements Runnable{
 		@Override
 		public void onReceiveLocation(BDLocation arg0) {
 			// TODO Auto-generated method stub
+			if(intrestePoint==null)return ;
 			GeoPoint geoPoint = new GeoPoint(0, 0);
 			geoPoint.setLatitudeE6((int)(arg0.getLatitude()*1e6));
 			geoPoint.setLongitudeE6((int)(arg0.getLongitude()*1e6));
-			d =DistanceUtil.getDistance(geoPoint, geoPointobj);
+			d =DistanceUtil.getDistance(geoPoint, intrestePoint.getGeoPoint());
 			Intent intent = new Intent();
 			if(arg0.getLocType()== BDLocation.TypeGpsLocation){
-				intent.putExtra("NND","GPS"+ s[index]+""+d+":");
+				intent.putExtra("NND","GPS"+ intrestePoint.getAddress()+""+d+":");
 			}else if(arg0.getLocType()== BDLocation.TypeNetWorkLocation){
-				intent.putExtra("NND", "NETWork"+s[index]+""+d+":");
+				intent.putExtra("NND", "NETWork"+intrestePoint.getAddress()+""+d+":");
 			}else if(arg0.getLocType()==BDLocation.TypeOffLineLocationNetworkFail){
-				intent.putExtra("NND", arg0.getLocType()+"NETWorkEroor"+s[index]+""+d+":" );
+				intent.putExtra("NND", arg0.getLocType()+"NETWorkEroor"+intrestePoint.getAddress()+""+d+":" );
 			}
 			intent.setAction("WC.WCC.WCCC");
 			sendBroadcast(intent);
@@ -142,40 +138,6 @@ public class WcService extends Service implements Runnable{
 		@Override
 		public void onReceivePoi(BDLocation poiLocation) {
 			// TODO Auto-generated method stub
-			if(poiLocation==null)return ;
-			  StringBuffer sb = new StringBuffer(256);
-			 
-			GeoPoint geoPoint =new GeoPoint(0, 0);
-			  geoPoint .setLatitudeE6((int)(poiLocation.getLatitude()*1e6));
-		      geoPoint.setLongitudeE6((int)(poiLocation.getLongitude()*1e6));
-				//mLocClient.getLocOption().setScanSpan(time);
-				 
-				d =DistanceUtil.getDistance(geoPoint, geoPointobj);
-	          sb.append("Poi time : ");
-	          sb.append(poiLocation.getTime());
-	          sb.append("\nerror code : ");
-	          sb.append(poiLocation.getLocType());
-	          sb.append("\nlatitude : ");
-	          sb.append(poiLocation.getLatitude());
-	          sb.append("\nlontitude : ");
-	          sb.append(poiLocation.getLongitude());
-	          sb.append("\nradius : ");
-	          sb.append(poiLocation.getRadius());
-	          if (poiLocation.getLocType() == BDLocation.TypeNetWorkLocation){
-	              sb.append("\naddr : ");
-	              sb.append(poiLocation.getAddrStr());
-	         } 
-	          if(poiLocation.hasPoi()){
-	               sb.append("\nPoi:");
-	               sb.append(poiLocation.getPoi());
-	         }else{             
-	               sb.append("noPoi information");
-	          }
-	          Intent intent = new Intent();
-		      intent.putExtra("NND", d+":::::::::::::"+sb.toString());
-			  intent.setAction("WC.WCC.WCCC");
-			  sendBroadcast(intent);
-	          Log.v("WC", ":::::::"+sb.toString());
 		}
 		
 	}
@@ -183,12 +145,7 @@ public class WcService extends Service implements Runnable{
 	 * 开始设置提醒
 	 * @param arg0
 	 */
-	public void start(MKTransitRouteResult arg0){
-		//this.mkrr = arg0;
-		g[0] = new GeoPoint((int)(31.242839*1e6), (int)(121.490053*1e6));
-		g[1] = new GeoPoint((int)(31.238196*1e6), (int)(121.482219*1e6));
-		g[2] = new GeoPoint((int)(31.299718*1e6), (int)(121.456401*1e6));
-		geoPointobj =  g[index];
+	public void start( ){
 		ltl = new LocationListenner();
 		mLocClient = new LocationClient(this);
 		mLocClient.registerLocationListener(ltl);
@@ -221,26 +178,7 @@ public class WcService extends Service implements Runnable{
 	public MKTransitRouteResult getMkrr() {
 		return null;
 	}
-    /****
-     * 
-     * @return
-     */
-	public GeoPoint getGeoPointobj() {
-		return geoPointobj;
-	}
     
-	
-	 
-  
-	public int getIndex() {
-		return index;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
-		geoPointobj = g[index];
-	}
-
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
