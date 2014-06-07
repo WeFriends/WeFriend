@@ -1,5 +1,8 @@
 package com.android.wefriend.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,13 +10,29 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.wefriend.adapter.ListAdapter;
+import com.android.wefriend.bean.IntrestePoint;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.search.MKLine;
+import com.baidu.mapapi.search.MKPoiInfo;
+import com.baidu.mapapi.search.MKRouteAddrResult;
+import com.baidu.mapapi.search.MKTransitRoutePlan;
+import com.baidu.mapapi.search.MKTransitRouteResult;
 import com.example.wcsmsc.R;
+import com.example.wefriend.seacher.SearcherOperator;
+import com.example.wefriend.seacher.SearcherOperator.OnGetTransitRouteResult;
 
 public class InfoMationActivity extends Activity implements OnClickListener{
 //
@@ -21,6 +40,21 @@ public class InfoMationActivity extends Activity implements OnClickListener{
 	private EditText stopName;
 	private ListView mListView;
 	private MyBroadcastReceiver myBroadcastReceiver;
+	private SearcherOperator    searcherOperator;//获取查询
+	private LocationClient      mLocClient;      //位置服务
+	private MyBDLoctionListenner myBDLoctionListenner;
+	private Handler handler = new Handler(){
+
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			super.handleMessage(msg);
+			ArrayList<IntrestePoint> intrestePoints =(ArrayList<IntrestePoint>) msg.obj;
+			ListAdapter listAdapter = new ListAdapter(InfoMationActivity.this, intrestePoints);
+			mListView.setAdapter(listAdapter);
+		}
+		
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +65,7 @@ public class InfoMationActivity extends Activity implements OnClickListener{
 		intentFilter.addAction("WC.WCC.WCCC");
 		registerReceiver(myBroadcastReceiver, intentFilter);
 		setContentView(R.layout.main_infor);
+		initdata();
 		initViews();
 	}
 
@@ -69,6 +104,8 @@ public class InfoMationActivity extends Activity implements OnClickListener{
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		unregisterReceiver(myBroadcastReceiver);
+		mLocClient.unRegisterLocationListener(myBDLoctionListenner);
+		mLocClient.stop();
 	}
 
 	private class MyBroadcastReceiver extends BroadcastReceiver {
@@ -96,12 +133,70 @@ public class InfoMationActivity extends Activity implements OnClickListener{
 			showByHot.setBackgroundColor(Color.GRAY);
 			break;
 		case R.id.search_searchbtn:
-			
+			String name =stopName.getText().toString();
+			if(name!=null){
+				searcherOperator.getBuStationInfo(name, onGetTransitRouteResult);
+			}
 			break;
 
 		default:
 			break;
 		}
+	}
+	/***
+	 * 初始化搜索
+	 */
+	private void initdata(){
+		searcherOperator = new SearcherOperator(this);
+		mLocClient =  new LocationClient(this);
+		myBDLoctionListenner =new MyBDLoctionListenner();
+		mLocClient.registerLocationListener(myBDLoctionListenner);
+		LocationClientOption option = new LocationClientOption();
+	    option.setOpenGps(false);//打开gps
+	    option.setPriority(LocationClientOption.GpsFirst); 
+	    option.setCoorType("bd09ll");     //设置坐标类型
+	    option.setPoiDistance(1000);
+	    option.setPoiExtraInfo(true); 
+	    mLocClient.setLocOption(option);
+	    mLocClient.start();
+		
+	}
+	
+	
+	/****
+	 * 搜索得到公交的信息
+	 */
+	private OnGetTransitRouteResult onGetTransitRouteResult = new OnGetTransitRouteResult() {
+		
+		@Override
+		public void onGetTransitRouteResult(List<IntrestePoint> intrestePoints, int error) {
+			// TODO Auto-generated method stub
+			 Message message = new Message();
+			 message.obj = intrestePoints;
+			 handler.sendMessage(message);
+			mLocClient.stop();
+		}
+	};
+	
+	/****
+	 * 定位服务
+	 * @author asus
+	 *
+	 */
+	private class MyBDLoctionListenner implements BDLocationListener {
+
+		@Override
+		public void onReceiveLocation(BDLocation arg0) {
+			// TODO Auto-generated method stub
+			searcherOperator.setLocationBDLocation(arg0);
+		}
+
+		@Override
+		public void onReceivePoi(BDLocation arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 
 }
