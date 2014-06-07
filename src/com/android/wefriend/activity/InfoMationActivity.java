@@ -1,4 +1,4 @@
-package com.example.map;
+package com.android.wefriend.activity;
 import android.app.Activity;
 
 import android.content.BroadcastReceiver;
