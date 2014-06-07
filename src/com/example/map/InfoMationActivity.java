@@ -36,7 +36,7 @@ public class InfoMationActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if(WcService.getInstance()==null){
+				if(true){
 					Intent intent = new Intent(InfoMationActivity.this,WcService.class);
 					intent.putExtra("INDEX", 0);
 					startService(intent);
@@ -51,7 +51,7 @@ public class InfoMationActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if(WcService.getInstance()==null){
+				if(true){
 					Intent intent = new Intent(InfoMationActivity.this,WcService.class);
 					intent.putExtra("INDEX", 1);
 					startService(intent);
@@ -63,7 +63,7 @@ public class InfoMationActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if(WcService.getInstance()==null){
+				if(true){
 					Intent intent = new Intent(InfoMationActivity.this,WcService.class);
 					intent.putExtra("INDEX", 2);
 					startService(intent);

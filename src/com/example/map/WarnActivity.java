@@ -333,8 +333,8 @@ public class WarnActivity extends Activity implements  BDLocationListener,MKMapT
 		public void onGetTransitRouteResult(MKTransitRouteResult arg0, int arg1) {
 			// TODO Auto-generated method stub
 			seacherOperator.TransitRouteResult(arg0, arg1);
-			WcService wcService =WcService.getInstance();
-			wcService.start(arg0);
+		 
+		 
 			 
 		}
 		
