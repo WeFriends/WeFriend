@@ -6,6 +6,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -24,22 +26,18 @@ public class WcService extends Service implements Runnable{
 	private LocationClient mLocClient;
 	 
 	private GeoPoint       geoPointobj;//目标距离
-	private double dm=500;             //提醒距离
+	private double    dm=500;             //提醒距离
 	private int    time = 1000*10;
-	private static WcService loacationService ;
 	private LocationListenner ltl;
     private Intent   lockintent ;
-    private boolean  is = true;
+    private boolean  is = false;
      
     
     private GeoPoint g[] = new GeoPoint[20];
     public static final  String   s[] ={"南京东路","人民广场","汶水路站"};
     private static int index = 0;
     private Thread thread;
-	public static WcService getInstance(){
-		
-		return loacationService ;
-	}
+	 
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -57,7 +55,7 @@ public class WcService extends Service implements Runnable{
 	    this.registerReceiver(mScreenOnReceiver, mScreenOnFilter);
 	    lockintent = new Intent(this,SmsMapActivity.class);
 	    lockintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		this.loacationService= this;
+		 
 		
 		 
 		
@@ -70,16 +68,25 @@ public class WcService extends Service implements Runnable{
 		Log.v("WC","服务被杀了");
 		unregisterReceiver(mScreenOnReceiver);
 		mLocClient.unRegisterLocationListener(ltl);
-		loacationService = null;
+		mLocClient.stop();
+	 
+		
+		 
 	}
 	@Override
 	public void onStart(Intent intent, int startId) {
 		// TODO Auto-generated method stub
 		super.onStart(intent, startId);
+		SharedPreferences sp = getSharedPreferences("DATE",Context.MODE_APPEND );
 		if(intent!=null){
-			this.index =intent.getIntExtra("INDEX",0);
-		    
+			this.index =intent.getIntExtra("INDEX",0); 
+			Editor editor =sp.edit();
+			editor.putInt("Index", index);
+			editor.commit();
+		}else{
+			index = sp.getInt("Index", 0);
 		}
+		if(!is)
 		start(null);
 	}
 	@Override
@@ -192,14 +199,14 @@ public class WcService extends Service implements Runnable{
 		mLocClient = new LocationClient(this);
 		mLocClient.registerLocationListener(ltl);
 		LocationClientOption option = new LocationClientOption();
-	    option.setOpenGps(true);//打开gps
+	    option.setOpenGps(false);//打开gps
 	    option.setPriority(LocationClientOption.GpsFirst); 
 	    option.setCoorType("bd09ll");     //设置坐标类型
 	    option.setPoiDistance(1000);
 	    option.setPoiExtraInfo(true); 
 	   // option.setScanSpan(time);
 	    mLocClient.setLocOption(option);
-	    is = true ;
+	   
 		thread = new Thread(this);
 		thread.start();
 	 
@@ -229,13 +236,7 @@ public class WcService extends Service implements Runnable{
 	}
     
 	
-	/****
-	 * 
-	 * @param loacationService
-	 */
-	public static void setLoacationService(WcService loacationService) {
-		WcService.loacationService = loacationService;
-	}
+	 
   
 	public int getIndex() {
 		return index;
@@ -249,7 +250,8 @@ public class WcService extends Service implements Runnable{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		while(true){
+		 is = true ;
+		while(is){
 			try {
 				 
 				if(mLocClient!=null&&!mLocClient.isStarted())
@@ -263,6 +265,7 @@ public class WcService extends Service implements Runnable{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			 is = false ;
 		}
 	}
 	
