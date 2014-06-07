@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.example.wcsmsc.R;
 
 public class InfoMationActivity extends Activity implements OnClickListener{
-
+//
 	private TextView distanceHint,searchBtn,showByHot,showByHistory;
 	private EditText stopName;
 	private ListView mListView;
