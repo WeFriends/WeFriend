@@ -3,6 +3,7 @@ package com.android.wefriend.adapter;
 import java.util.ArrayList;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -85,7 +86,9 @@ public class ListAdapter extends BaseAdapter implements OnClickListener{
 		}else if(v.getId()==R.id.item_start){
 			Intent intent = new Intent(activity, WcService.class);
 			IntrestePoint intrestePoint =(IntrestePoint)v.getTag();
-			intent.putExtra("BEAN", intrestePoint);
+			Bundle mBundle = new Bundle();  
+            mBundle.putParcelable("BEAN", intrestePoint);  
+			intent.putExtra("INTRES", mBundle);
 			activity.startService(intent);
 		}
 	}

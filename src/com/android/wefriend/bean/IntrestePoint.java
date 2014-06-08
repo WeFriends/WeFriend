@@ -2,25 +2,33 @@ package com.android.wefriend.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 
 public class IntrestePoint implements Parcelable{
 	private String    address;
-	private GeoPoint  geoPoint;//ÏÂ³µµÄµØµã
-	private GeoPoint  objPoint;//µ½Ä¿µÄµØµÄµØµã
+	private GeoPoint  geoPoint;//ï¿½Â³ï¿½ï¿½ÄµØµï¿½
+	private GeoPoint  objPoint;//ï¿½ï¿½Ä¿ï¿½ÄµØµÄµØµï¿½
 	private String    choose;
-	private String    title; //¹«½»³µÃû³Æ
+	private String    title; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	private int       num;
 	private long      distance;
+	
+	private String latitude;
+	private String lontitude;
+	private String stopName;
+	private String lineName;
+	
+	
+	
 	
 	public static final Parcelable.Creator<IntrestePoint> CREATOR = new Creator<IntrestePoint>() { 
 		         @Override 
 		         public IntrestePoint createFromParcel(Parcel source) {  
-		             String str = source.readString();
-		             IntrestePoint test = new IntrestePoint();
-		             return test; 
+		              
+		             return new IntrestePoint(source); 
 		         }
 		         @Override
 		         public IntrestePoint[] newArray(int size) {
@@ -30,7 +38,18 @@ public class IntrestePoint implements Parcelable{
 		         
 		         
 	};
-
+     
+	public IntrestePoint (){
+		
+	}
+	
+    IntrestePoint(Parcel source){
+		 address = source.readString();
+         title   = source.readString();
+         GeoPoint g = new GeoPoint(source.readInt(), source.readInt());
+         geoPoint = g;
+         //Log.v("WC",test.address+"KKK:"+test.geoPoint.getLatitudeE6()+":"+test.geoPoint.getLongitudeE6()+test.title);
+	}
 	public String getAddress() {
 		return address;
 	}
@@ -66,7 +85,7 @@ public class IntrestePoint implements Parcelable{
 	}
 	public String getInfoContent(){
 		
-		return "³Ë×ø¹«½»"+title+"¾­¹ı"+num+"Õ¾"+"µ½"+address+"ÀëÄ¿µÄµØµÄ»¹ÓĞ"+getDistance();
+		return "ä¹˜å"+title+"ç»è¿‡"+num+"ç«™"+"åˆ°"+address+"ä¸‹è½¦";
 	}
 	public int getNum() {
 		return num;
@@ -88,12 +107,37 @@ public class IntrestePoint implements Parcelable{
 	@Override
 	public void writeToParcel(Parcel arg0, int arg1) {
 		// TODO Auto-generated method stub
-		arg0.writeSerializable(address);
+		arg0.writeString(address);
 		arg0.writeString(title);
 		arg0.writeInt(geoPoint.getLatitudeE6());
 		arg0.writeInt(geoPoint.getLongitudeE6());
+		Log.v("WC","KKK:"+geoPoint.getLatitudeE6()+":"+geoPoint.getLongitudeE6());
 	}
 	
+	public String getStopName() {
+		return stopName;
+	}
+	public void setStopName(String stopName) {
+		this.stopName = stopName;
+	}
+	public String getLineName() {
+		return lineName;
+	}
+	public void setLineName(String lineName) {
+		this.lineName = lineName;
+	}
+	public String getLatitude() {
+		return latitude;
+	}
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+	public String getLontitude() {
+		return lontitude;
+	}
+	public void setLontitude(String lontitude) {
+		this.lontitude = lontitude;
+	}
 	
 	
 }

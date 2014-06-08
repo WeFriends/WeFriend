@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.wefriend.bean.IntrestePoint;
 import com.baidu.location.BDLocation;
@@ -25,13 +26,13 @@ import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.example.wcsmsc.SmsAplication;
 
 /******
- * ËÑË÷Àà
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * @author asus
  *
  */
 public class SearcherOperator {
 	
-	private MKSearch mkSearch; //ÓÃÓÚÎ»ÖÃ¼ìË÷¡¢ÖÜ±ß¼ìË÷¡¢·¶Î§¼ìË÷¡¢¹«½»¼ìË÷¡¢¼Ý³Ë¼ìË÷¡¢²½ÐÐ¼ìË÷
+	private MKSearch mkSearch; //ï¿½ï¿½ï¿½ï¿½Î»ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü±ß¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý³Ë¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½
 	private OnGetTransitRouteResult ogtrresult;
 	private BDLocation   bdLocation;
 	
@@ -43,7 +44,7 @@ public class SearcherOperator {
 	            public void onGetPoiDetailSearchResult(int type, int error) {
 	            }
 	            /**
-	             * ÔÚ´Ë´¦ÀípoiËÑË÷½á¹û , ÓÃpoioverlay ÏÔÊ¾
+	             * ï¿½Ú´Ë´ï¿½ï¿½ï¿½poiï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ , ï¿½ï¿½poioverlay ï¿½ï¿½Ê¾
 	             */
 	            public void onGetPoiResult(MKPoiResult res, int type, int error) {
 	                 
@@ -56,6 +57,7 @@ public class SearcherOperator {
 	            	if(ogtrresult!=null){
 	    				int n = res.getNumPlan();
 	    				ArrayList<IntrestePoint> intrestePoints = new ArrayList<IntrestePoint>();
+	    				 
 	    				for(int i = 0 ; i<n;i++){
 	    					MKTransitRoutePlan mktr = res.getPlan(i);
 	    					
@@ -102,7 +104,7 @@ public class SearcherOperator {
 	});}
 	
 	/************
-	 * »ñÈ¡Ä¿µÄµØÐÅÏ¢
+	 * ï¿½ï¿½È¡Ä¿ï¿½Äµï¿½ï¿½ï¿½Ï¢
 	 * @param startName
 	 * @param endName
 	 * @param ogtrr
@@ -118,7 +120,7 @@ public class SearcherOperator {
 	
 	public void getBuStationInfo(MKPlanNode start, MKPlanNode end,OnGetTransitRouteResult ogtrr){
 		this.ogtrresult = ogtrr;
-		mkSearch.transitSearch("ÉÏº£", start,end);
+		mkSearch.transitSearch("ä¸Šæµ·", start,end);
 	}
 	
 	public void getBuStationInfo(String  endName,OnGetTransitRouteResult ogtrr){
