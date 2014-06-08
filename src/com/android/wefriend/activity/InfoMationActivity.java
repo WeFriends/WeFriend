@@ -25,11 +25,6 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.search.MKLine;
-import com.baidu.mapapi.search.MKPoiInfo;
-import com.baidu.mapapi.search.MKRouteAddrResult;
-import com.baidu.mapapi.search.MKTransitRoutePlan;
-import com.baidu.mapapi.search.MKTransitRouteResult;
 import com.example.wcsmsc.R;
 import com.example.wefriend.seacher.SearcherOperator;
 import com.example.wefriend.seacher.SearcherOperator.OnGetTransitRouteResult;
@@ -40,8 +35,8 @@ public class InfoMationActivity extends Activity implements OnClickListener{
 	private EditText stopName;
 	private ListView mListView;
 	private MyBroadcastReceiver myBroadcastReceiver;
-	private SearcherOperator    searcherOperator;//»ñÈ¡²éÑ¯
-	private LocationClient      mLocClient;      //Î»ÖÃ·þÎñ
+	private SearcherOperator    searcherOperator;//ï¿½ï¿½È¡ï¿½ï¿½Ñ¯
+	private LocationClient      mLocClient;      //Î»ï¿½Ã·ï¿½ï¿½ï¿½
 	private MyBDLoctionListenner myBDLoctionListenner;
 	private Handler handler = new Handler(){
 
@@ -83,7 +78,7 @@ public class InfoMationActivity extends Activity implements OnClickListener{
 	}
 	
 	/**
-	 * ¿ªÆô¶¨Î»·þÎñ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½
 	 * */
 	private void initService(int type) {
 		Intent intent = new Intent(InfoMationActivity.this, WcService.class);
@@ -92,7 +87,7 @@ public class InfoMationActivity extends Activity implements OnClickListener{
 	}
 
 	/**
-	 * ¹Ø±Õ¶¨Î»·þÎñ
+	 * ï¿½Ø±Õ¶ï¿½Î»ï¿½ï¿½ï¿½ï¿½
 	 * */
 	private void stopService() {
 		Intent intent = new Intent(InfoMationActivity.this, WcService.class);
@@ -114,7 +109,7 @@ public class InfoMationActivity extends Activity implements OnClickListener{
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
 			String str = intent.getStringExtra("NND");
-			distanceHint.setText("ÀëÄ¿µÄµØ£º" + str + "Ã×");
+			distanceHint.setText("ï¿½ï¿½Ä¿ï¿½ÄµØ£ï¿½" + str + "ï¿½ï¿½");
 		}
 
 	}
@@ -144,7 +139,7 @@ public class InfoMationActivity extends Activity implements OnClickListener{
 		}
 	}
 	/***
-	 * ³õÊ¼»¯ËÑË÷
+	 * ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private void initdata(){
 		searcherOperator = new SearcherOperator(this);
@@ -152,9 +147,9 @@ public class InfoMationActivity extends Activity implements OnClickListener{
 		myBDLoctionListenner =new MyBDLoctionListenner();
 		mLocClient.registerLocationListener(myBDLoctionListenner);
 		LocationClientOption option = new LocationClientOption();
-	    option.setOpenGps(false);//´ò¿ªgps
+	    option.setOpenGps(false);//ï¿½ï¿½gps
 	    option.setPriority(LocationClientOption.GpsFirst); 
-	    option.setCoorType("bd09ll");     //ÉèÖÃ×ø±êÀàÐÍ
+	    option.setCoorType("bd09ll");     //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	    option.setPoiDistance(1000);
 	    option.setPoiExtraInfo(true); 
 	    mLocClient.setLocOption(option);
@@ -164,7 +159,7 @@ public class InfoMationActivity extends Activity implements OnClickListener{
 	
 	
 	/****
-	 * ËÑË÷µÃµ½¹«½»µÄÐÅÏ¢
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 	 */
 	private OnGetTransitRouteResult onGetTransitRouteResult = new OnGetTransitRouteResult() {
 		
@@ -173,13 +168,14 @@ public class InfoMationActivity extends Activity implements OnClickListener{
 			// TODO Auto-generated method stub
 			 Message message = new Message();
 			 message.obj = intrestePoints;
-			 handler.sendMessage(message);
+			handler.sendMessage(message);
+			Log.v("WC","KKKKKKKKKKKKKï¼š "+intrestePoints.size());
 			mLocClient.stop();
 		}
 	};
 	
 	/****
-	 * ¶¨Î»·þÎñ
+	 * ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½
 	 * @author asus
 	 *
 	 */

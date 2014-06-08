@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -27,7 +28,7 @@ public class WcService extends Service implements Runnable{
 	private LocationClient mLocClient;
 	 
 	 
-	private double    dm=500;             //ÌáÐÑ¾àÀë
+	private double    dm=500;             //ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½
 	private int    time = 1000*10;
 	private LocationListenner ltl;
     private Intent   lockintent ;
@@ -45,7 +46,7 @@ public class WcService extends Service implements Runnable{
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-		/*×¢²á¹ã²¥*/
+		/*×¢ï¿½ï¿½ã²¥*/
 		IntentFilter mScreenOnFilter = new IntentFilter("android.intent.action.SCREEN_ON");
 		mScreenOnFilter.setPriority(-888);
 		mScreenOnFilter.addAction("android.intent.action.SCREEN_OFF");
@@ -56,7 +57,7 @@ public class WcService extends Service implements Runnable{
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		thread.interrupt();
-		Log.v("WC","·þÎñ±»É±ÁË");
+		Log.v("WC","ï¿½ï¿½ï¿½ï¿½É±ï¿½ï¿½");
 		unregisterReceiver(mScreenOnReceiver);
 		mLocClient.unRegisterLocationListener(ltl);
 		mLocClient.stop();
@@ -70,7 +71,8 @@ public class WcService extends Service implements Runnable{
 		super.onStart(intent, startId);
 		SharedPreferences sp = getSharedPreferences("DATE",Context.MODE_APPEND );
 		if(intent!=null){
-			this.intrestePoint =(IntrestePoint)intent.getParcelableExtra("BEAN"); 
+			Bundle bundle = intent.getBundleExtra("INTRES");
+			this.intrestePoint =bundle.getParcelable("BEAN"); 
 			 
 		}else{
 			 
@@ -100,7 +102,7 @@ public class WcService extends Service implements Runnable{
 	public double d;
 	/****
 	 * 
-	 * @author ¶¨Î»·þÎñ
+	 * @author ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½
 	 *
 	 */
 	public class LocationListenner implements BDLocationListener {
@@ -134,7 +136,7 @@ public class WcService extends Service implements Runnable{
 			 }
 		}
          
-		///»ñÈ¡¸½½üµÄÒ»Ð©»ù±¾ÐÅÏ¢
+		///ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ð©ï¿½ï¿½ï¿½ï¿½Ï¢
 		@Override
 		public void onReceivePoi(BDLocation poiLocation) {
 			// TODO Auto-generated method stub
@@ -142,7 +144,7 @@ public class WcService extends Service implements Runnable{
 		
 	}
 	/****
-	 * ¿ªÊ¼ÉèÖÃÌáÐÑ
+	 * ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * @param arg0
 	 */
 	public void start( ){
@@ -150,9 +152,9 @@ public class WcService extends Service implements Runnable{
 		mLocClient = new LocationClient(this);
 		mLocClient.registerLocationListener(ltl);
 		LocationClientOption option = new LocationClientOption();
-	    option.setOpenGps(false);//´ò¿ªgps
+	    option.setOpenGps(false);//ï¿½ï¿½gps
 	    option.setPriority(LocationClientOption.GpsFirst); 
-	    option.setCoorType("bd09ll");     //ÉèÖÃ×ø±êÀàÐÍ
+	    option.setCoorType("bd09ll");     //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	    option.setPoiDistance(1000);
 	    option.setPoiExtraInfo(true); 
 	   // option.setScanSpan(time);
